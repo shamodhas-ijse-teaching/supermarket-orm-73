@@ -1,6 +1,25 @@
-# Supermarket System - Layered Architecture
+# 🛒 Supermarket System – ORM Layered Architecture (GDSE-73)
 
-A JavaFX application demonstrating a layered architecture for a simple supermarket management system. This project is developed as part of the curriculum for the **Graduate Diploma in Software Engineering (GDSE)** course for the GDSE-74 batch at IJSE.
+[![Java](https://img.shields.io/badge/Java-17+-brightgreen?logo=java)](https://www.oracle.com/java/)
+[![JavaFX](https://img.shields.io/badge/JavaFX-UI-blue?logo=java)](https://openjfx.io/)
+[![Hibernate](https://img.shields.io/badge/Hibernate-ORM-orange?logo=hibernate)]
+[![MySQL](https://img.shields.io/badge/Database-MySQL-blue?logo=mysql)]
+[![IJSE GDSE](https://img.shields.io/badge/IJSE-GDSE--73-purple)](https://ijse.lk)
+
+A JavaFX desktop application demonstrating **Object-Oriented Mapping (ORM)** using **Hibernate** in a **Layered Architecture**.  
+Developed as part of the **GDSE-73** course at IJSE.
+
+---
+
+## 📌 Module: ORM with Hibernate
+
+This module implements **Customer Management** with Hibernate ORM — replacing JDBC and emphasizing clean separation between layers.
+
+---
+
+## 🧱 Architecture Overview
+
+This system follows a strict **Layered + MVC** architecture pattern:
 
 ---
 
@@ -26,10 +45,14 @@ This project strictly follows a layered architecture to separate concerns and im
 
 ## 🛠️ Technologies Used
 
-* **Java / JavaFX:** For the core application and user interface.
-* **JDBC:** For database connectivity.
-* **MySQL:** As the backend database.
-* **Git & GitHub:** For version control.
+| Technology      | Description                          |
+|-----------------|--------------------------------------|
+| Java 17+        | Core language                        |
+| JavaFX          | UI Framework                         |
+| Hibernate ORM   | Database persistence layer           |
+| MySQL           | Relational Database                  |
+| Maven / Gradle  | Dependency & Build Management        |
+| Git & GitHub    | Version Control                      |
 
 ---
 
