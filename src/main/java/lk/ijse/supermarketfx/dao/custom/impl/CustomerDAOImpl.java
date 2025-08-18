@@ -1,10 +1,13 @@
 package lk.ijse.supermarketfx.dao.custom.impl;
 
+import lk.ijse.supermarketfx.config.FactoryConfiguration;
 import lk.ijse.supermarketfx.dao.SQLUtil;
 import lk.ijse.supermarketfx.dao.custom.CustomerDAO;
 import lk.ijse.supermarketfx.dto.CustomerDTO;
 import lk.ijse.supermarketfx.entity.Customer;
 import lk.ijse.supermarketfx.util.CrudUtil;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,6 +27,26 @@ import java.util.Optional;
  **/
 
 public class CustomerDAOImpl implements CustomerDAO {
+    private final FactoryConfiguration factoryConfiguration =
+            FactoryConfiguration.getInstance();
+
+
+    @Override
+    public boolean save(Customer customer) throws SQLException {
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.persist(customer);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            return false;
+        }finally {
+            session.close();
+        }
+    }
+
     @Override
     public List<Customer> getAll() throws SQLException {
         ResultSet resultSet = SQLUtil.execute("SELECT * FROM customer");
@@ -49,18 +72,6 @@ public class CustomerDAOImpl implements CustomerDAO {
             return resultSet.getString(1);
         }
         return null;
-    }
-
-    @Override
-    public boolean save(Customer customer) throws SQLException {
-        return SQLUtil.execute(
-                "INSERT INTO customer (customer_id, name, nic, email, phone) VALUES (?, ?, ?, ?, ?)",
-                customer.getId(),
-                customer.getName(),
-                customer.getNic(),
-                customer.getEmail(),
-                customer.getPhone()
-        );
     }
 
     @Override
