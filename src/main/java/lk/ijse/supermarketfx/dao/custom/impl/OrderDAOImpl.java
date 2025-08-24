@@ -1,9 +1,11 @@
 package lk.ijse.supermarketfx.dao.custom.impl;
 
+import lk.ijse.supermarketfx.config.FactoryConfiguration;
 import lk.ijse.supermarketfx.dao.SQLUtil;
 import lk.ijse.supermarketfx.dao.custom.OrderDAO;
 import lk.ijse.supermarketfx.entity.Order;
 import lk.ijse.supermarketfx.util.CrudUtil;
+import org.hibernate.Session;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,20 +25,19 @@ import java.util.Optional;
  **/
 
 public class OrderDAOImpl implements OrderDAO {
+
+    private final FactoryConfiguration factoryConfiguration = FactoryConfiguration.getInstance();
+
     @Override
     public List<Order> getAll() throws SQLException {
-        List<Order> list = new ArrayList<>();
-
-        ResultSet rs = SQLUtil.execute("SELECT * FROM orders");
-        while (rs.next()) {
-            list.add(new Order(
-                    rs.getString(1),
-                    rs.getString(2),
-                    rs.getDate(3)
-            ));
+        Session session = factoryConfiguration.getSession();
+        try {
+            List<Order> list = session.createQuery("FROM Order", Order.class)
+                    .getResultList();
+            return list;
+        } finally {
+            session.close();
         }
-
-        return list;
     }
 
     @Override
@@ -52,11 +53,12 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public boolean save(Order order) throws SQLException {
-        return SQLUtil.execute("insert into orders values (?,?,?)",
-                order.getId(),
-                order.getCustomerId(),
-                order.getOrderDate()
-        );
+//        return SQLUtil.execute("insert into orders values (?,?,?)",
+//                order.getId(),
+//                order.getCustomerId(),
+//                order.getOrderDate()
+//        );
+        return false;
     }
 
     @Override

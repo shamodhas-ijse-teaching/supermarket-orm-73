@@ -32,13 +32,14 @@ public class OrderDetailDAOImpl implements OrderDetailsDAO {
 
     @Override
     public boolean save(OrderDetail orderDetail) throws SQLException {
-        return SQLUtil.execute(
-                "insert into order_details values (?,?,?,?)",
-                orderDetail.getOrderId(),
-                orderDetail.getItemId(),
-                orderDetail.getQuantity(),
-                orderDetail.getPrice()
-        );
+//        return SQLUtil.execute(
+//                "insert into order_details values (?,?,?,?)",
+//                orderDetail.getOrderId(),
+//                orderDetail.getItemId(),
+//                orderDetail.getQuantity(),
+//                orderDetail.getPrice()
+//        );
+        return false;
     }
 
     @Override

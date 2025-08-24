@@ -45,37 +45,38 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
 
     @Override
     public boolean placeOrder(OrderDTO dto) throws SQLException {
-        Connection connection = DBConnection.getInstance().getConnection();
-        try {
-            connection.setAutoCommit(false);
-
-            Optional<Customer> optionalCustomer = customerDAO.findById(dto.getCustomerId());
-            if (optionalCustomer.isEmpty()) {
-                throw new NotFoundException("Customer not found");
-            }
-
-            Order order = new Order();
-            order.setId(dto.getOrderId());
-            order.setCustomerId(dto.getCustomerId());
-            order.setOrderDate(dto.getDate());
-
-            boolean isOrderSaved = orderDAO.save(order);
-            if (isOrderSaved) {
-                boolean isSuccess = saveDetailsAndUpdateItem(dto.getCartList());
-                if (isSuccess) {
-                    connection.commit();
-                    return true;
-                }
-            }
-            connection.rollback();
-            return false;
-//            throw new Exception("Fail somthing");
-        } catch (Exception e) {
-            connection.rollback();
-            return false;
-        } finally {
-            connection.setAutoCommit(true);
-        }
+//        Connection connection = DBConnection.getInstance().getConnection();
+//        try {
+//            connection.setAutoCommit(false);
+//
+//            Optional<Customer> optionalCustomer = customerDAO.findById(dto.getCustomerId());
+//            if (optionalCustomer.isEmpty()) {
+//                throw new NotFoundException("Customer not found");
+//            }
+//
+//            Order order = new Order();
+//            order.setId(dto.getOrderId());
+//            order.setCustomerId(dto.getCustomerId());
+//            order.setOrderDate(dto.getDate());
+//
+//            boolean isOrderSaved = orderDAO.save(order);
+//            if (isOrderSaved) {
+//                boolean isSuccess = saveDetailsAndUpdateItem(dto.getCartList());
+//                if (isSuccess) {
+//                    connection.commit();
+//                    return true;
+//                }
+//            }
+//            connection.rollback();
+//            return false;
+////            throw new Exception("Fail somthing");
+//        } catch (Exception e) {
+//            connection.rollback();
+//            return false;
+//        } finally {
+//            connection.setAutoCommit(true);
+//        }
+        return false;
     }
 
     @Override
@@ -91,44 +92,44 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
         return tableChar + "001";
     }
 
-    private boolean saveDetailsAndUpdateItem(List<OrderDetailsDTO> detailsList) throws SQLException {
-        //            for (int i = 1; i < detailsList.size() - 1; i++) {
-//                OrderDetailsDTO orderDetailsDTO = detailsList.get(i);
+//    private boolean saveDetailsAndUpdateItem(List<OrderDetailsDTO> detailsList) throws SQLException {
+//        //            for (int i = 1; i < detailsList.size() - 1; i++) {
+////                OrderDetailsDTO orderDetailsDTO = detailsList.get(i);
+////            }
+//        for (OrderDetailsDTO detailsDTO : detailsList) {
+//            OrderDetail orderDetail = new OrderDetail();
+//            orderDetail.setOrderId(detailsDTO.getOrderId());
+//            orderDetail.setItemId(detailsDTO.getItemId());
+//            orderDetail.setQuantity(detailsDTO.getQty());
+//            orderDetail.setPrice(BigDecimal.valueOf(detailsDTO.getPrice()));
+//
+//            if (!orderDetailsDAO.save(orderDetail)) {
+////                rollback
+//                return false;
 //            }
-        for (OrderDetailsDTO detailsDTO : detailsList) {
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrderId(detailsDTO.getOrderId());
-            orderDetail.setItemId(detailsDTO.getItemId());
-            orderDetail.setQuantity(detailsDTO.getQty());
-            orderDetail.setPrice(BigDecimal.valueOf(detailsDTO.getPrice()));
-
-            if (!orderDetailsDAO.save(orderDetail)) {
-//                rollback
-                return false;
-            }
-
-            Optional<Item> optionalItem = itemDAO.findById(detailsDTO.getItemId());
-            if (optionalItem.isEmpty()) {
-                throw new NotFoundException("Item not found");
-            }
-//            Item item = optionalItem.get();
-//            int oldQuantity = item.getQuantity();
-
-            // check quantity here
-
-//            int newQuantity = oldQuantity - detailsDTO.getQty();
 //
-//            item.setQuantity(newQuantity);
+//            Optional<Item> optionalItem = itemDAO.findById(detailsDTO.getItemId());
+//            if (optionalItem.isEmpty()) {
+//                throw new NotFoundException("Item not found");
+//            }
+////            Item item = optionalItem.get();
+////            int oldQuantity = item.getQuantity();
 //
-//            itemDAO.update(item);
-            boolean isItemUpdated = itemDAO.reduceQuantity(
-                    detailsDTO.getItemId(),
-                    detailsDTO.getQty()
-            );
-            if (!isItemUpdated) {
-                return false;
-            }
-        }
-        return true;
-    }
+//            // check quantity here
+//
+////            int newQuantity = oldQuantity - detailsDTO.getQty();
+////
+////            item.setQuantity(newQuantity);
+////
+////            itemDAO.update(item);
+//            boolean isItemUpdated = itemDAO.reduceQuantity(
+//                    detailsDTO.getItemId(),
+//                    detailsDTO.getQty()
+//            );
+//            if (!isItemUpdated) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 }
