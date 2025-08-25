@@ -93,7 +93,6 @@ public class CustomerDAOImpl implements CustomerDAO {
                     String.class
             ).setMaxResults(1);
             List<String> list = query.list();
-
             if (list.isEmpty()) {
                 return null;
             }
@@ -171,23 +170,38 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public List<Customer> search(String text) throws SQLException {
         String searchText = "%" + text + "%";
-        ResultSet resultSet = SQLUtil.execute(
-                "SELECT * FROM customer WHERE customer_id LIKE ? OR name LIKE ? OR nic LIKE ? OR email LIKE ? OR phone LIKE ?",
-                searchText, searchText, searchText, searchText, searchText
-        );
-
-        List<Customer> list = new ArrayList<>();
-        while (resultSet.next()) {
-            Customer customer = new Customer(
-                    resultSet.getString(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3),
-                    resultSet.getString(4),
-                    resultSet.getString(5)
+        Session session = factoryConfiguration.getSession();
+        try {
+            // SELECT * FROM customer WHERE customer_id LIKE ? OR name LIKE ? OR nic LIKE ? OR email LIKE ? OR phone LIKE ?
+            Query<Customer> query = session.createQuery(
+                    "FROM Customer c WHERE c.id OR " +
+                            "c.name LIKE :text OR c.nic LIKE :text OR " +
+                            "c.email LIKE :text OR c.phone LIKE :text",
+                    Customer.class
             );
-            list.add(customer);
+            query.setParameter("text", searchText);
+            List<Customer> customerList = query.list();
+            return customerList;
+        } finally {
+            session.close();
         }
-        return list;
+//        ResultSet resultSet = SQLUtil.execute(
+//                "SELECT * FROM customer WHERE customer_id LIKE ? OR name LIKE ? OR nic LIKE ? OR email LIKE ? OR phone LIKE ?",
+//                searchText, searchText, searchText, searchText, searchText
+//        );
+//
+//        List<Customer> list = new ArrayList<>();
+//        while (resultSet.next()) {
+//            Customer customer = new Customer(
+//                    resultSet.getString(1),
+//                    resultSet.getString(2),
+//                    resultSet.getString(3),
+//                    resultSet.getString(4),
+//                    resultSet.getString(5)
+//            );
+//            list.add(customer);
+//        }
+//        return list;
     }
 
     @Override

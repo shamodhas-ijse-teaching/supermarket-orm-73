@@ -93,17 +93,33 @@ public class QueryTest {
         // Avoid writing HQL / JPQL as string
         // Use for dynamic queries
 
-        // 1. create CriteriaBuilder object
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        // 2. create CriteriaQuery object
-        CriteriaQuery<Customer> customerQuery = criteriaBuilder.createQuery(Customer.class);
-        // 3. Setup root entity
-        Root<Customer> root = customerQuery.from(Customer.class);
-        // 4. add where condition
-        customerQuery.select(root).where(criteriaBuilder.equal(root.get("name"), "John Doe"));
-        // 5. Run Query
-        Query<Customer> query = session.createQuery(customerQuery);
-        List<Customer> customerList = query.list();
+//        // 1. create CriteriaBuilder object
+//        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+//        // 2. create CriteriaQuery object
+//        CriteriaQuery<Customer> customerQuery = criteriaBuilder.createQuery(Customer.class);
+//        // 3. Setup root entity
+//        Root<Customer> root = customerQuery.from(Customer.class);
+//        // 4. add where condition
+//        customerQuery.select(root).where(criteriaBuilder.equal(root.get("name"), "John Doe"));
+//        // 5. Run Query
+//        Query<Customer> query = session.createQuery(customerQuery);
+//        List<Customer> customerList = query.list();
+
+//        select * from customers c left join orders o on c.id = o.cus_id where c.id = 'C001'
+        Query<Object[]> query = session.createQuery(
+                "FROM Customer c left join Order o on c.id = o.customer",
+                Object[].class
+        );
+
+        List<Object[]> dataList = query.list();
+        for (Object[] object : dataList) {
+            System.out.println(object[0]); // column 1
+        }
+
+
+        // Object[] columns
+        // list data rows
+
 
     }
 }
