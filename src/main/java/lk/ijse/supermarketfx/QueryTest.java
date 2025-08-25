@@ -5,6 +5,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import lk.ijse.supermarketfx.config.FactoryConfiguration;
 import lk.ijse.supermarketfx.entity.Customer;
+import lk.ijse.supermarketfx.entity.Order;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
@@ -107,15 +108,35 @@ public class QueryTest {
 
 //        select * from customers c left join orders o on c.id = o.cus_id where c.id = 'C001'
         Query<Object[]> query = session.createQuery(
-                "FROM Customer c left join Order o on c.id = o.customer",
+                "FROM Customer c left join Order o on c.id = o.customer WHERE c.id='C001'",
                 Object[].class
         );
 
-        List<Object[]> dataList = query.list();
-        for (Object[] object : dataList) {
-            System.out.println(object[0]); // column 1
-        }
+        // Customer, Order join
+        // so Object[] -> 0 index have Customer object data
+        // so Object[] -> 1 index have Order object data
 
+        List<Object[]> dataList = query.list();
+
+        //            Object[] -> [Customer, Order]
+        //            List<Object[]> - [[Customer, Order], [Customer, Order], [Customer, Order]]
+
+        for (Object[] objects : dataList) {
+            System.out.println("=====================");
+
+            Customer customer = (Customer) objects[0];
+            Order order = (Order) objects[1];
+
+            System.out.println(customer.toString());
+            System.out.println(order.toString());
+
+//            for (Object object : objects) {
+//                System.out.println(object);
+//            }
+//            Customer, Order join
+//            objects[0] -> Customer
+//            objects[1] -> Order
+        }
 
         // Object[] columns
         // list data rows
