@@ -8,6 +8,7 @@ import lk.ijse.supermarketfx.entity.Customer;
 import lk.ijse.supermarketfx.util.CrudUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,7 +31,6 @@ public class CustomerDAOImpl implements CustomerDAO {
     private final FactoryConfiguration factoryConfiguration =
             FactoryConfiguration.getInstance();
 
-
     @Override
     public boolean save(Customer customer) throws SQLException {
         Session session = factoryConfiguration.getSession();
@@ -49,29 +49,63 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public List<Customer> getAll() throws SQLException {
-        ResultSet resultSet = SQLUtil.execute("SELECT * FROM customer");
-
-        List<Customer> list = new ArrayList<>();
-        while (resultSet.next()) {
-            Customer customer = new Customer(
-                    resultSet.getString(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3),
-                    resultSet.getString(4),
-                    resultSet.getString(5)
-            );
-            list.add(customer);
+        Session session = factoryConfiguration.getSession();
+        try {
+            Query<Customer> query = session.createQuery("from Customer", Customer.class);
+            List<Customer> customerList = query.list();
+            return customerList;
+        } finally {
+            session.close();
         }
-        return list;
+//        ResultSet resultSet = SQLUtil.execute("SELECT * FROM customer");
+//
+//        List<Customer> list = new ArrayList<>();
+//        while (resultSet.next()) {
+//            Customer customer = new Customer(
+//                    resultSet.getString(1),
+//                    resultSet.getString(2),
+//                    resultSet.getString(3),
+//                    resultSet.getString(4),
+//                    resultSet.getString(5)
+//            );
+//            list.add(customer);
+//        }
+//        return list;
     }
 
     @Override
     public String getLastId() throws SQLException {
-        ResultSet resultSet = SQLUtil.execute("SELECT customer_id FROM customer ORDER BY customer_id DESC LIMIT 1");
-        if (resultSet.next()) {
-            return resultSet.getString(1);
+        Session session = factoryConfiguration.getSession();
+        try {
+            // get customer
+//            Query<Customer> query1 = session.createQuery(
+//                    "FROM Customer cus ORDER BY cus.id DESC",
+//                    Customer.class
+//            ).setMaxResults(1);
+//            List<Customer> list1 = query1.list();
+//            Customer customer = list1.get(0);
+//            String customerId = customer.getId();
+
+            // only get id
+//            SELECT customer_id FROM customer ORDER BY customer_id DESC
+            Query<String> query = session.createQuery(
+                    "SELECT cus.id FROM Customer cus ORDER BY cus.id DESC",
+                    String.class
+            ).setMaxResults(1);
+            List<String> list = query.list();
+
+            if (list.isEmpty()) {
+                return null;
+            }
+            return list.get(0);
+        } finally {
+            session.close();
         }
-        return null;
+//        ResultSet resultSet = SQLUtil.execute("SELECT customer_id FROM customer ORDER BY customer_id DESC LIMIT 1");
+//        if (resultSet.next()) {
+//            return resultSet.getString(1);
+//        }
+//        return null;
     }
 
     @Override
