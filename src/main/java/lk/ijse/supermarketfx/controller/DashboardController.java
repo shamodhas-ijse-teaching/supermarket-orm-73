@@ -8,6 +8,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import lk.ijse.supermarketfx.db.DBConnection;
+import lk.ijse.supermarketfx.dto.UserDTO;
+import lk.ijse.supermarketfx.util.AuthUtil;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,6 +40,11 @@ public class DashboardController implements Initializable {
 //    }
 //        System.out.println("Dashboard loaded, I'm initialize");
         navigateTo("/view/CustomerPage.fxml");
+
+        boolean isAdmin = AuthUtil.isAdmin();
+        if (!isAdmin) {
+            btnItem.setVisible(false);
+        }
     }
 
     public void btnCustomerOnAction(ActionEvent actionEvent) throws IOException {

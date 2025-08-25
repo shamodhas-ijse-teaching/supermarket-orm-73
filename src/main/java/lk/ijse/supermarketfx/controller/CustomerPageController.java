@@ -23,6 +23,7 @@ import lk.ijse.supermarketfx.db.DBConnection;
 import lk.ijse.supermarketfx.dto.CustomerDTO;
 import lk.ijse.supermarketfx.dto.tm.CustomerTM;
 import lk.ijse.supermarketfx.model.CustomerModel;
+import lk.ijse.supermarketfx.util.AuthUtil;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -73,6 +74,7 @@ public class CustomerPageController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
 //        CustomerBO bo = (CustomerBO) BOFactory.getInstance().getBO(BOTypes.CUSTOMER);
 //        bo.getAllCustomer();
 
@@ -93,6 +95,14 @@ public class CustomerPageController implements Initializable {
             new Alert(
                     Alert.AlertType.ERROR, "Fail to load data..!"
             ).show();
+        }
+
+        //        handle authentication
+        boolean isAdmin = AuthUtil.isAdmin();
+        if (!isAdmin) {
+            btnSave.setDisable(true);
+            btnDelete.setDisable(true);
+            btnUpdate.setDisable(true);
         }
     }
 
