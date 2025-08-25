@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lk.ijse.supermarketfx.config.FactoryConfiguration;
 import lk.ijse.supermarketfx.dao.CrudDAO;
 import lk.ijse.supermarketfx.dao.DAOFactory;
 import lk.ijse.supermarketfx.dao.DAOTypes;
@@ -17,6 +18,7 @@ import lk.ijse.supermarketfx.dao.custom.impl.ItemDAOImpl;
 import lk.ijse.supermarketfx.dao.custom.impl.OrderDAOImpl;
 import lk.ijse.supermarketfx.dao.custom.impl.QueryDAOImpl;
 import lk.ijse.supermarketfx.entity.Customer;
+import org.hibernate.Session;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,19 @@ import java.util.ArrayList;
 
 public class AppInitializer extends Application {
     public static void main(String[] args) {
+//        Session currentSession1 = FactoryConfiguration.getInstance().getCurrentSession();
+//        Session currentSession2 = FactoryConfiguration.getInstance().getCurrentSession();
+//
+//        System.out.println("=========== Current session");
+//        System.out.println(currentSession1 == currentSession2);
+//        System.out.println(currentSession1.equals(currentSession2));
+//
+//        System.out.println("==============================");
+//        Session session1 = FactoryConfiguration.getInstance().getSession();
+//        Session session2 = FactoryConfiguration.getInstance().getSession();
+//
+//        System.out.println(session1 == session2);
+//        System.out.println(session1.equals(session2));
         launch(args);
     }
 

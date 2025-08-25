@@ -110,4 +110,16 @@ public class ItemDAOImpl implements ItemDAO {
                 id
         );
     }
+
+    @Override
+    public boolean reduceQty(Item item) {
+        Session currentSession = factoryConfiguration.getCurrentSession();
+        try {
+            currentSession.merge(item);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

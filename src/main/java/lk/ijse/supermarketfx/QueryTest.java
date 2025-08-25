@@ -115,29 +115,18 @@ public class QueryTest {
         // Customer, Order join
         // so Object[] -> 0 index have Customer object data
         // so Object[] -> 1 index have Order object data
-
         List<Object[]> dataList = query.list();
-
         //            Object[] -> [Customer, Order]
         //            List<Object[]> - [[Customer, Order], [Customer, Order], [Customer, Order]]
-
         for (Object[] objects : dataList) {
-            System.out.println("=====================");
-
             Customer customer = (Customer) objects[0];
             Order order = (Order) objects[1];
-
             System.out.println(customer.toString());
             System.out.println(order.toString());
-
-//            for (Object object : objects) {
-//                System.out.println(object);
-//            }
 //            Customer, Order join
 //            objects[0] -> Customer
 //            objects[1] -> Order
         }
-
         // Object[] columns
         // list data rows
 

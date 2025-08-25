@@ -53,12 +53,14 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public boolean save(Order order) throws SQLException {
-//        return SQLUtil.execute("insert into orders values (?,?,?)",
-//                order.getId(),
-//                order.getCustomerId(),
-//                order.getOrderDate()
-//        );
-        return false;
+        Session currentSession = FactoryConfiguration.getInstance().getCurrentSession();
+        try {
+            currentSession.persist(order);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

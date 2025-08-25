@@ -18,4 +18,6 @@ import java.sql.SQLException;
 
 public interface ItemDAO extends CrudDAO<Item> {
     boolean reduceQuantity(String id, int qty) throws SQLException;
+
+    boolean reduceQty(Item item);
 }
