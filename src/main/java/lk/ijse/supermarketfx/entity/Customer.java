@@ -26,12 +26,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "customers")
 public class Customer {
     @Id
+    @Column(name = "customer_id")
     private String id;
 
-    @Column(nullable = false)
+    @Column(name = "customer_name", nullable = false)
     private String name;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String nic;
 
     @Column(nullable = false, unique = true)
