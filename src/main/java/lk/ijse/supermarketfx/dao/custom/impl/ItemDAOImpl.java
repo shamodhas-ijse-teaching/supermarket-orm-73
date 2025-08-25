@@ -1,8 +1,11 @@
 package lk.ijse.supermarketfx.dao.custom.impl;
 
+import lk.ijse.supermarketfx.config.FactoryConfiguration;
 import lk.ijse.supermarketfx.dao.SQLUtil;
 import lk.ijse.supermarketfx.dao.custom.ItemDAO;
 import lk.ijse.supermarketfx.entity.Item;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -20,6 +23,9 @@ import java.util.Optional;
  **/
 
 public class ItemDAOImpl implements ItemDAO {
+    private final FactoryConfiguration factoryConfiguration =
+            FactoryConfiguration.getInstance();
+
     @Override
     public List<Item> getAll() {
         return List.of();
@@ -32,17 +38,58 @@ public class ItemDAOImpl implements ItemDAO {
 
     @Override
     public boolean save(Item item) {
-        return false;
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.persist(item);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public boolean update(Item item) {
-        return false;
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            session.merge(item);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public boolean delete(String id) {
-        return false;
+        Session session = factoryConfiguration.getSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Item item = session.get(Item.class, id);
+            if (item != null) {
+                session.remove(item);
+                transaction.commit();
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
     }
 
     @Override

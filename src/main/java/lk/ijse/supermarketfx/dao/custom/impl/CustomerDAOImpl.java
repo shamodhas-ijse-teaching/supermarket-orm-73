@@ -42,7 +42,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         } catch (Exception e) {
             transaction.rollback();
             return false;
-        }finally {
+        } finally {
             session.close();
         }
     }
@@ -76,20 +76,42 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public boolean update(Customer customer) throws SQLException {
-        return SQLUtil.execute(
-                "UPDATE customer SET name = ?, nic = ?, email = ?, phone = ? WHERE customer_id = ?",
-                customer.getName(),
-                customer.getNic(),
-                customer.getEmail(),
-                customer.getPhone(),
-                customer.getId()
-        );
+        Session session = factoryConfiguration.getSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            session.merge(customer);
+            tx.commit();
+            return true;
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
-    public boolean delete(String id) throws SQLException {
-        return SQLUtil.execute("DELETE FROM customer WHERE customer_id = ?", id);
+    public boolean delete(String id) {
+        Session session = factoryConfiguration.getSession();
+        Transaction tx = session.beginTransaction();
+        try {
+            Customer customer = session.get(Customer.class, id);
+            if (customer != null) {
+                session.remove(customer);
+                tx.commit();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
     }
+
 
     @Override
     public List<String> getAllIds() throws SQLException {
@@ -103,17 +125,13 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public Optional<Customer> findById(String id) throws SQLException {
-        ResultSet resultSet = SQLUtil.execute("SELECT * FROM customer WHERE customer_id = ?", id);
-        if (resultSet.next()) {
-            return Optional.of(new Customer(
-                    resultSet.getString(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3),
-                    resultSet.getString(4),
-                    resultSet.getString(5)
-            ));
+        Session session = factoryConfiguration.getSession();
+        try {
+            Customer customer = session.get(Customer.class, id);
+            return Optional.ofNullable(customer);
+        } finally {
+            session.close();
         }
-        return Optional.empty();
     }
 
     @Override
