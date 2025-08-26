@@ -42,13 +42,13 @@ public class LoginController implements Initializable {
 
     private final List<UserDTO> userDTOS = new ArrayList<>();
 
-
     public void btnLoginOnACtion(ActionEvent actionEvent) throws IOException {
         String username = txtUsername.getText();
         String password = txtPassword.getText();
 
         for (UserDTO userDTO : userDTOS) {
             if (userDTO.getUsername().equals(username) && userDTO.getPassword().equals(password)) {
+//                userDTO
                 Roles role = userDTO.getRole();
                 AuthUtil.setUserDTO(userDTO);
 

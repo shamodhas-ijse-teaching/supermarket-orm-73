@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import lk.ijse.supermarketfx.db.DBConnection;
+import lk.ijse.supermarketfx.dto.Roles;
 import lk.ijse.supermarketfx.dto.UserDTO;
 import lk.ijse.supermarketfx.util.AuthUtil;
 
@@ -41,9 +42,11 @@ public class DashboardController implements Initializable {
 //        System.out.println("Dashboard loaded, I'm initialize");
         navigateTo("/view/CustomerPage.fxml");
 
-        boolean isAdmin = AuthUtil.isAdmin();
-        if (!isAdmin) {
-            btnItem.setVisible(false);
+//        boolean isAdmin = AuthUtil.isAdmin();
+        UserDTO userDTO = AuthUtil.getUserDTO();
+        if (!userDTO.getRole().equals(Roles.ADMIN)) {
+//            btnItem.setDisable(true);
+//            btnItem.setVisible(false);
         }
     }
 

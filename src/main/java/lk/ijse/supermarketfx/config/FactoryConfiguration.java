@@ -49,9 +49,14 @@ public class FactoryConfiguration {
         return session;
     }
 
-    // return the same session object for the current session
+    // return the same session object for the
+    // current session
+    //
     // thread bound session
-    // auto close happens on transaction commit or rollback
+
+    // auto close happens on transaction commit
+    // or rollback
+    //
     // recommend for layered dao + service(bo) architecture
     public Session getCurrentSession() {
         return sessionFactory.getCurrentSession();
